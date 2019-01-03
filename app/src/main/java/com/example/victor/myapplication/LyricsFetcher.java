@@ -1,15 +1,16 @@
 package com.example.victor.myapplication;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
+
 public class LyricsFetcher extends AsyncTask<String, Character, Void> {
 
-    private TextView textView;
+    private WeakReference<MainActivity> activity;
 
-    public LyricsFetcher(Activity activity) {
-        this.textView = activity.findViewById(R.id.textView2);
+    LyricsFetcher(WeakReference<MainActivity> activity) {
+        this.activity = activity;
     }
 
     @Override
@@ -21,21 +22,25 @@ public class LyricsFetcher extends AsyncTask<String, Character, Void> {
     protected Void doInBackground(String... strings) {
         char[] chars = strings[0].toCharArray();
         System.out.println(strings[1]); // param2
-        for (char c: chars) {
-            publishProgress(c);
+        while (true) {
+            if (isCancelled()) {
+                System.out.println("cancelled");
+                return null;
+            }
+            publishProgress();
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException ie) {
                 Thread.currentThread().interrupt();
             }
         }
-        return null;
     }
 
     @Override
     protected void onProgressUpdate(Character... chars) {
         System.out.println("On Progress Update");
-        textView.append(chars[0].toString());
+        this.activity.get().test();
+//        ((TextView) this.activity.get().findViewById(R.id.textView2)).append(chars[0].toString());
     }
 
     @Override
