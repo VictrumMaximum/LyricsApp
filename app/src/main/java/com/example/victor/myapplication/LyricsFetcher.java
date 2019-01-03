@@ -1,11 +1,10 @@
 package com.example.victor.myapplication;
 
 import android.os.AsyncTask;
-import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 
-public class LyricsFetcher extends AsyncTask<String, Character, Void> {
+public class LyricsFetcher extends AsyncTask<String, Character, String> {
 
     private WeakReference<MainActivity> activity;
 
@@ -19,32 +18,17 @@ public class LyricsFetcher extends AsyncTask<String, Character, Void> {
     }
 
     @Override
-    protected Void doInBackground(String... strings) {
-        char[] chars = strings[0].toCharArray();
-        System.out.println(strings[1]); // param2
-        while (true) {
-            if (isCancelled()) {
-                System.out.println("cancelled");
-                return null;
-            }
-            publishProgress();
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException ie) {
-                Thread.currentThread().interrupt();
-            }
-        }
+    protected String doInBackground(String... strings) {
+        String song = strings[0];
+        String result = "result";
+        return result;
     }
 
     @Override
-    protected void onProgressUpdate(Character... chars) {
-        System.out.println("On Progress Update");
-        this.activity.get().test();
-//        ((TextView) this.activity.get().findViewById(R.id.textView2)).append(chars[0].toString());
-    }
-
-    @Override
-    protected void onPostExecute(Void v) {
+    protected void onPostExecute(String str) {
         System.out.println("On Post Execute");
+        if (this.activity.get() != null) {
+            this.activity.get().setText(str);
+        }
     }
 }
