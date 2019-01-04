@@ -1,7 +1,6 @@
-package com.example.victor.myapplication.query.musixmatch;
+package com.example.victor.myapplication.query.musicDemons;
 
 import android.content.Intent;
-import android.os.Bundle;
 
 import com.example.victor.myapplication.DisplayLyrics;
 import com.example.victor.myapplication.MainActivity;

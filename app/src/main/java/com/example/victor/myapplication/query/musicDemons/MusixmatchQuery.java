@@ -1,4 +1,4 @@
-package com.example.victor.myapplication.query.musixmatch;
+package com.example.victor.myapplication.query.musicDemons;
 
 import android.app.Activity;
 

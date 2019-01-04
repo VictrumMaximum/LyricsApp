@@ -9,6 +9,7 @@ import android.widget.EditText;
 import com.example.victor.myapplication.query.musixmatch.APITask;
 import com.example.victor.myapplication.query.musixmatch.MatcherLyricsQuery;
 import com.example.victor.myapplication.query.musixmatch.MusixmatchQuery;
+import com.example.victor.myapplication.query.musixmatch.MusixmatchQueryParameter;
 
 import java.lang.ref.WeakReference;
 
@@ -55,15 +56,15 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         String apiKey = ((EditText)findViewById(R.id.apiKey)).getText().toString();
-        String track = "Sultans of Swing";//((EditText)findViewById(R.id.track)).getText().toString();
-        String artist = "Dire Straits";//((EditText)findViewById(R.id.artist)).getText().toString();
+        String track = "Sexy and i know it";//((EditText)findViewById(R.id.track)).getText().toString();
+        String artist = "LMFAO";//((EditText)findViewById(R.id.artist)).getText().toString();
 //        String album = ((EditText)findViewById(R.id.album)).getText().toString();
 
         MusixmatchQuery mmq = new MatcherLyricsQuery(this);
-        mmq.addParam("apikey", apiKey);
-        mmq.addParam("q_track", track);
-        mmq.addParam("q_artist", artist);
-        this.apiTask = new APITask(new WeakReference<>(this), mmq);
+        mmq.addParam(MusixmatchQueryParameter.apikey, apiKey);
+        mmq.addParam(MusixmatchQueryParameter.q_track, track);
+        mmq.addParam(MusixmatchQueryParameter.q_artist, artist);
+        this.apiTask = new APITask(mmq);
         this.apiTask.execute();
     }
 

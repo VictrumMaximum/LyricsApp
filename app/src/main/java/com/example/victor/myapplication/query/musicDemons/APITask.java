@@ -1,15 +1,11 @@
-package com.example.victor.myapplication.query.musixmatch;
+package com.example.victor.myapplication.query.musicDemons;
 
 import android.os.AsyncTask;
 
-import com.example.victor.myapplication.MainActivity;
 import com.google.gson.GsonBuilder;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
