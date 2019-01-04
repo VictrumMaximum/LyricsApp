@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,23 +47,33 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public void sendMessage(View view) {
+    public void sendRequest(View view) {
         // Do not execute if there is a task already active.
         // lyricsFetcherTask will be set to null in the callback setText(String str)
         if (this.lyricsFetcherTask != null) {
             return;
         }
-        EditText editText = findViewById(R.id.editText);
-        String message = editText.getText().toString();
+        String apiKey = ((EditText)findViewById(R.id.apiKey)).getText().toString();
+        String track = ((EditText)findViewById(R.id.track)).getText().toString();
+        String artist = ((EditText)findViewById(R.id.artist)).getText().toString();
+        String album = ((EditText)findViewById(R.id.album)).getText().toString();
 
         this.lyricsFetcherTask = new LyricsFetcher(new WeakReference<>(this));
-        this.lyricsFetcherTask.execute(message);
+        this.lyricsFetcherTask.execute(apiKey, track, artist, album);
     }
 
     // callback function from lyricsFetchThread
-    public void setText(String str) {
-        TextView tw = findViewById(R.id.textView2);
-        tw.setText(str);
+    public void setText(MusixmatchResponse mmr) {
+        TextView tw = findViewById(R.id.textView);
+        System.out.println("length : "+mmr.message.body.track_list.length);
+        System.out.println("track id 1 : " + mmr.message.body.track_list[1].track.track_id);
+        System.out.println(new Gson().toJson(mmr));
+//        tw.setText(str);
         this.lyricsFetcherTask = null;
+    }
+
+    public void reportError(Exception error) {
+        error.printStackTrace();
+        // TODO: alert user with popup
     }
 }

@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">My Application</string>
-    <string name="edit_msg">hi stupido</string>
+    <string name="key_msg">key</string>
+    <string name="artist_msg">artist</string>
+    <string name="album_msg">album</string>
+    <string name="track_msg">track</string>
     <string name="send_button">Send</string>
 </resources>
