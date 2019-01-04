@@ -6,14 +6,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import com.example.victor.myapplication.query.musixmatch.LyricsFetcher;
+import com.example.victor.myapplication.query.musixmatch.APITask;
+import com.example.victor.myapplication.query.musixmatch.MatcherLyricsQuery;
 import com.example.victor.myapplication.query.musixmatch.MusixmatchQuery;
-import com.example.victor.myapplication.query.musixmatch.TrackSearchQuery;
 
 import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
-    private LyricsFetcher lyricsFetcherTask;
+    private APITask apiTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,33 +42,33 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         System.out.println("on destroy");
-        if (this.lyricsFetcherTask != null && !this.lyricsFetcherTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
-            this.lyricsFetcherTask.cancel(true);
+        if (this.apiTask != null && !this.apiTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
+            this.apiTask.cancel(true);
         }
         super.onDestroy();
     }
 
     public void sendRequest(View view) {
         // Do not execute if there is a task already active.
-        // lyricsFetcherTask will be set to null in the callback setText(String str)
-        if (this.lyricsFetcherTask != null) {
+        // apiTask will be set to null in the callback setText(String str)
+        if (this.apiTask != null) {
             return;
         }
         String apiKey = ((EditText)findViewById(R.id.apiKey)).getText().toString();
-        String track = ((EditText)findViewById(R.id.track)).getText().toString();
-        String artist = ((EditText)findViewById(R.id.artist)).getText().toString();
-        String album = ((EditText)findViewById(R.id.album)).getText().toString();
+        String track = "Sultans of Swing";//((EditText)findViewById(R.id.track)).getText().toString();
+        String artist = "Dire Straits";//((EditText)findViewById(R.id.artist)).getText().toString();
+//        String album = ((EditText)findViewById(R.id.album)).getText().toString();
 
-        MusixmatchQuery mmq = new TrackSearchQuery(this);
+        MusixmatchQuery mmq = new MatcherLyricsQuery(this);
         mmq.addParam("apikey", apiKey);
         mmq.addParam("q_track", track);
         mmq.addParam("q_artist", artist);
-        this.lyricsFetcherTask = new LyricsFetcher(new WeakReference<>(this), mmq);
-        this.lyricsFetcherTask.execute();
+        this.apiTask = new APITask(new WeakReference<>(this), mmq);
+        this.apiTask.execute();
     }
 
     public void resetTask () {
-        this.lyricsFetcherTask = null;
+        this.apiTask = null;
     }
 
     // callback function from lyricsFetchTask
@@ -76,13 +76,13 @@ public class MainActivity extends AppCompatActivity {
 //        TextView tw = findViewById(R.id.textView);
 //        System.out.println(new Gson().toJson(mmr));
 ////        tw.setText(str);
-//        this.lyricsFetcherTask = null;
+//        this.apiTask = null;
 //    }
 //
 //    // callback function from lyricsFetchTask
 //    public void reportError(Exception error) {
 //        error.printStackTrace();
-//        this.lyricsFetcherTask = null;
+//        this.apiTask = null;
 //        // TODO: alert user with popup
 //    }
 }

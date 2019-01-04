@@ -19,6 +19,10 @@ class MusixmatchResponse {
     }
 }
 
+class ErrorResponseBody {
+    String msg;
+}
+
 class TrackSearchBody {
     Track[] track_list;
     class Track {
@@ -28,8 +32,9 @@ class TrackSearchBody {
     }
 }
 
-class ErrorResponseBody {
-    String msg;
+class MatcherLyricsBody {
+    int lyrics_id;
+    String lyrics_body;
 }
 
 class MusixmatchResponseDeserializer implements JsonDeserializer<MusixmatchResponse> {
@@ -54,5 +59,16 @@ class TrackSearchBodyDeserializer implements JsonDeserializer<TrackSearchBody> {
             body.track_list[i] = context.deserialize(trackList.get(i), TrackSearchBody.Track.class);
         }
         return body;
+    }
+}
+
+class MatcherLyricsBodyDeserializer implements JsonDeserializer<MatcherLyricsBody> {
+    public MatcherLyricsBody deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+            throws JsonParseException {
+        MatcherLyricsBody matcherLyricsBody = new MatcherLyricsBody();
+        JsonObject lyrics = json.getAsJsonObject().getAsJsonObject("lyrics");
+        matcherLyricsBody.lyrics_body = lyrics.get("lyrics_body").getAsString();
+        matcherLyricsBody.lyrics_id = lyrics.get("lyrics_id").getAsInt();
+        return matcherLyricsBody;
     }
 }
