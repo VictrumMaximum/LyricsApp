@@ -5,9 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import com.google.gson.Gson;
+import com.example.victor.myapplication.query.musixmatch.LyricsFetcher;
+import com.example.victor.myapplication.query.musixmatch.MusixmatchQuery;
+import com.example.victor.myapplication.query.musixmatch.TrackSearchQuery;
 
 import java.lang.ref.WeakReference;
 
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         System.out.println("on destroy");
-        if (!this.lyricsFetcherTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
+        if (this.lyricsFetcherTask != null && !this.lyricsFetcherTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
             this.lyricsFetcherTask.cancel(true);
         }
         super.onDestroy();
@@ -58,22 +59,30 @@ public class MainActivity extends AppCompatActivity {
         String artist = ((EditText)findViewById(R.id.artist)).getText().toString();
         String album = ((EditText)findViewById(R.id.album)).getText().toString();
 
-        this.lyricsFetcherTask = new LyricsFetcher(new WeakReference<>(this));
-        this.lyricsFetcherTask.execute(apiKey, track, artist, album);
+        MusixmatchQuery mmq = new TrackSearchQuery(this);
+        mmq.addParam("apikey", apiKey);
+        mmq.addParam("q_track", track);
+        mmq.addParam("q_artist", artist);
+        this.lyricsFetcherTask = new LyricsFetcher(new WeakReference<>(this), mmq);
+        this.lyricsFetcherTask.execute();
     }
 
-    // callback function from lyricsFetchThread
-    public void setText(MusixmatchResponse mmr) {
-        TextView tw = findViewById(R.id.textView);
-        System.out.println("length : "+mmr.message.body.track_list.length);
-        System.out.println("track id 1 : " + mmr.message.body.track_list[1].track.track_id);
-        System.out.println(new Gson().toJson(mmr));
-//        tw.setText(str);
+    public void resetTask () {
         this.lyricsFetcherTask = null;
     }
 
-    public void reportError(Exception error) {
-        error.printStackTrace();
-        // TODO: alert user with popup
-    }
+    // callback function from lyricsFetchTask
+//    public void setText(MusixmatchResponse mmr) {
+//        TextView tw = findViewById(R.id.textView);
+//        System.out.println(new Gson().toJson(mmr));
+////        tw.setText(str);
+//        this.lyricsFetcherTask = null;
+//    }
+//
+//    // callback function from lyricsFetchTask
+//    public void reportError(Exception error) {
+//        error.printStackTrace();
+//        this.lyricsFetcherTask = null;
+//        // TODO: alert user with popup
+//    }
 }
