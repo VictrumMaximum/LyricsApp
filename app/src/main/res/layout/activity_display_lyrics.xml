@@ -26,13 +26,11 @@
             android:id="@+id/lyricsHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="hb"
             android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
         <TextView
             android:id="@+id/lyricsBody"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="iurisjsoigjostj" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

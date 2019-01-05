@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import com.example.victor.myapplication.query.musixmatch.APITask;
+import com.example.victor.myapplication.query.apiSeeds.APITask;
+import com.example.victor.myapplication.query.apiSeeds.ApiSeedsQuery;
 import com.example.victor.myapplication.query.musixmatch.MatcherLyricsQuery;
 import com.example.victor.myapplication.query.musixmatch.MusixmatchQuery;
 import com.example.victor.myapplication.query.musixmatch.MusixmatchQueryParameter;
 
-import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
     private APITask apiTask;
@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendRequest(View view) {
         // Do not execute if there is a task already active.
-        // apiTask will be set to null in the callback setText(String str)
         if (this.apiTask != null) {
             return;
         }
@@ -60,11 +59,8 @@ public class MainActivity extends AppCompatActivity {
         String artist = "LMFAO";//((EditText)findViewById(R.id.artist)).getText().toString();
 //        String album = ((EditText)findViewById(R.id.album)).getText().toString();
 
-        MusixmatchQuery mmq = new MatcherLyricsQuery(this);
-        mmq.addParam(MusixmatchQueryParameter.apikey, apiKey);
-        mmq.addParam(MusixmatchQueryParameter.q_track, track);
-        mmq.addParam(MusixmatchQueryParameter.q_artist, artist);
-        this.apiTask = new APITask(mmq);
+        ApiSeedsQuery asq = new ApiSeedsQuery(this, artist, track, apiKey);
+        this.apiTask = new APITask(asq);
         this.apiTask.execute();
     }
 
