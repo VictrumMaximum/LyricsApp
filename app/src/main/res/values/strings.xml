@@ -5,4 +5,7 @@
     <string name="album_msg">album</string>
     <string name="track_msg">track</string>
     <string name="send_button">Send</string>
+    <string name="preference_file_key">com.example.victor.myapplication.trackAndArtist</string>
+    <string name="preference_file_track_key">com.example.victor.myapplication.track</string>
+    <string name="preference_file_artist_key">com.example.victor.myapplication.artist</string>
 </resources>

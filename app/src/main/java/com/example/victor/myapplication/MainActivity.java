@@ -1,8 +1,14 @@
 package com.example.victor.myapplication;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.os.AsyncTask;
+import android.service.notification.NotificationListenerService;
+import android.service.notification.StatusBarNotification;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -51,17 +57,17 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendRequest(View view) {
         // Do not execute if there is a task already active.
-        if (this.apiTask != null) {
-            return;
-        }
-        String apiKey = ((EditText)findViewById(R.id.apiKey)).getText().toString();
-        String track = "Sexy and i know it";//((EditText)findViewById(R.id.track)).getText().toString();
-        String artist = "LMFAO";//((EditText)findViewById(R.id.artist)).getText().toString();
-//        String album = ((EditText)findViewById(R.id.album)).getText().toString();
-
-        ApiSeedsQuery asq = new ApiSeedsQuery(this, artist, track, apiKey);
-        this.apiTask = new APITask(asq);
-        this.apiTask.execute();
+//        if (this.apiTask != null) {
+//            return;
+//        }
+//        String apiKey = ((EditText)findViewById(R.id.apiKey)).getText().toString();
+//        String track = "Sexy and i know it";//((EditText)findViewById(R.id.track)).getText().toString();
+//        String artist = "LMFAO";//((EditText)findViewById(R.id.artist)).getText().toString();
+////        String album = ((EditText)findViewById(R.id.album)).getText().toString();
+//
+//        ApiSeedsQuery asq = new ApiSeedsQuery(this, artist, track, apiKey);
+//        this.apiTask = new APITask(asq);
+//        this.apiTask.execute();
     }
 
     public void resetTask () {
