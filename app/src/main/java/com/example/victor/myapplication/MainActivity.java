@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 
@@ -22,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
             EditText editText = findViewById(R.id.apiKey);
             editText.setText(this.apiKey);
             editText.setEnabled(false);
+            findViewById(R.id.apiKeyEditButton).setVisibility(View.VISIBLE);
+            findViewById(R.id.apiKeySaveButton).setVisibility(View.INVISIBLE);
         }
     }
 
@@ -64,17 +65,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void saveApiKey(View view) {
-        Log.d("MainActivity", "save api key");
+        Log.d("MainActivity", "Save api key");
         EditText apiKeyField = findViewById(R.id.apiKey);
 
         String apiKey = apiKeyField.getText().toString();
         System.out.println("current: " + this.apiKey);
         System.out.println("new: " + apiKey);
         if (!apiKey.equals(this.apiKey)) {
+            Log.d("MainActivity", "New api key provided");
             SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString(getString(R.string.preference_file_api_key), apiKey);
             editor.apply();
+        } else {
+            Log.d("MainActivity", "Same api key provided");
         }
         view.setVisibility(View.INVISIBLE);
         findViewById(R.id.apiKeyEditButton).setVisibility(View.VISIBLE);

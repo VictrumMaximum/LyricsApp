@@ -1,6 +1,5 @@
 package com.example.victor.myapplication;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,7 +22,7 @@ public class DisplayLyrics extends ActivityWithApiTask {
         String trackName = sharedPref.getString(getString(R.string.preference_file_track_key), "No track name");
         String artistName = sharedPref.getString(getString(R.string.preference_file_artist_key), "No artist name");
         String lyricsBody = "No api key provided";
-        if (true || sharedPref.contains(getString(R.string.preference_file_api_key))) { // check for api key
+        if (sharedPref.contains(getString(R.string.preference_file_api_key))) { // check for api key
             if (!sharedPref.contains(getString(R.string.preference_file_cached_key))) { // check for cached result
                 String apiKey = sharedPref.getString(getString(R.string.preference_file_api_key), ""); // at this point sure to be there
                 this.asyncTask = new APITask(this, apiKey, artistName, trackName);
@@ -49,7 +48,7 @@ public class DisplayLyrics extends ActivityWithApiTask {
     public void callback(ApiSeedsResponse asr) {
         super.callback(asr);
         if (asr == null) {
-            System.out.println("ALERT USER"); //TODO: alert user
+            Log.e("DisplayActivity", "APITask reponse is null"); //TODO: alert user
             return;
         }
         // save result text as cache

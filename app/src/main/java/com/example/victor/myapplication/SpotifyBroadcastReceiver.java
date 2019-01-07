@@ -1,6 +1,5 @@
 package com.example.victor.myapplication;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,14 +9,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.service.notification.NotificationListenerService;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 public class SpotifyBroadcastReceiver extends BroadcastReceiver {
     private static final String NOTIFICATION_TITLE = "Lyrics for spotify";
-    private static final String NOTIFICATION_TEXT = "Text";
     private static final int NOTIFICATION_ID = 0;
     private static final String NOTIFICATION_CHANNEL_ID = "com.example.victor.myapplication.lyricsForSpotify";
     private static final String NOTIFICATION_CHANNEL_NAME = "lyricsForSpotify";
@@ -38,7 +35,7 @@ public class SpotifyBroadcastReceiver extends BroadcastReceiver {
         switch (action) {
             case METADATA_CHANGED:
                 this.updateSharedPreferences(context, intent);
-                this.createNotification(context);
+                this.createNotification(context, intent);
                 break;
             case PLAYBACK_STATE_CHANGED:
                 break;
@@ -64,7 +61,7 @@ public class SpotifyBroadcastReceiver extends BroadcastReceiver {
         editor.commit(); // maybe commit instead of apply?
     }
 
-    private void createNotification(Context context) {
+    private void createNotification(Context context, Intent intent) {
         this.createNotificationChannel(context);
         // TODO: set task properly: back button should return to previous app, not to MainActivity and the homescreen.
         // Create an Intent for the activity you want to start
@@ -76,10 +73,13 @@ public class SpotifyBroadcastReceiver extends BroadcastReceiver {
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        String artistName = intent.getStringExtra("artist");
+        String trackName = intent.getStringExtra("track");
+        String notificationText = artistName + ", " + trackName;
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle(NOTIFICATION_TITLE)
-                .setContentText(NOTIFICATION_TEXT)
+                .setContentText(notificationText)
                 .setContentIntent(resultPendingIntent)
                 .setPriority(NOTIFICATION_PRIORITY_LEVEL);
 

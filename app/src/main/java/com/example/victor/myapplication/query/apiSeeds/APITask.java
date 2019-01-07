@@ -6,6 +6,7 @@ import android.util.Log;
 import com.example.victor.myapplication.ActivityWithApiTask;
 import com.google.gson.Gson;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -35,18 +36,18 @@ public class APITask extends AsyncTask<Void, Void, ApiSeedsResponse> {
         sb.append(baseUrl).append(artist).append("/").append(track).append("?")
                 .append("apikey=").append(apiKey);
         String urlString = sb.toString().replaceAll(" ", "%20");
-        System.out.println(urlString);
+        Log.d("HTTP request", urlString);
         try {
             URL url = new URL(urlString);
             // default settings are ok.
             HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
-//            InputStream inputStream = httpCon.getInputStream();
-            InputStream inputStream = new ByteArrayInputStream(testResponse.getBytes("UTF-8"));
+            InputStream inputStream = httpCon.getInputStream();
+//            InputStream inputStream = new ByteArrayInputStream(testResponse.getBytes("UTF-8"));
             InputStreamReader reader = new InputStreamReader(inputStream, "UTF-8");
             ApiSeedsResponse response = new Gson().fromJson(reader, ApiSeedsResponse.class);
             reader.close();
             inputStream.close();
-            return response; // TODO : change back to response
+            return response;
         } catch (Exception e) {
             return null;
         }
