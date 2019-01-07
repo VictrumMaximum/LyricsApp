@@ -23,13 +23,14 @@ public class DisplayLyrics extends ActivityWithApiTask {
         String trackName = sharedPref.getString(getString(R.string.preference_file_track_key), "No track name");
         String artistName = sharedPref.getString(getString(R.string.preference_file_artist_key), "No artist name");
         String lyricsBody = "No api key provided";
-        if (sharedPref.contains(getString(R.string.preference_file_api_key))) { // check for api key
+        if (true || sharedPref.contains(getString(R.string.preference_file_api_key))) { // check for api key
             if (!sharedPref.contains(getString(R.string.preference_file_cached_key))) { // check for cached result
                 String apiKey = sharedPref.getString(getString(R.string.preference_file_api_key), ""); // at this point sure to be there
                 this.asyncTask = new APITask(this, apiKey, artistName, trackName);
                 this.asyncTask.execute();
                 return;
             }
+            Log.d("DisplayActivity", "Got lyrics from cache");
             lyricsBody = sharedPref.getString(getString(R.string.preference_file_cached_key), ""); // at this point sure to be there
         }
         this.showLyrics(artistName, trackName, lyricsBody);
@@ -51,7 +52,13 @@ public class DisplayLyrics extends ActivityWithApiTask {
             System.out.println("ALERT USER"); //TODO: alert user
             return;
         }
-        System.out.println(asr.result.track.text);
+        // save result text as cache
+        SharedPreferences sharedPref = getSharedPreferences(
+                getString(R.string.preference_file_key), MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.preference_file_cached_key), asr.result.track.text);
+        editor.apply();
+
         this.showLyrics(asr.result.artist.name, asr.result.track.name, asr.result.track.text);
     }
 
