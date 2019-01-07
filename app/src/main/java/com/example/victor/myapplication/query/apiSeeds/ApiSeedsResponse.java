@@ -1,19 +1,19 @@
 package com.example.victor.myapplication.query.apiSeeds;
 
 public class ApiSeedsResponse {
-    Result result;
-    class Result {
-        Artist artist;
-        Track track;
+    public Result result;
+    public class Result {
+        public Artist artist;
+        public Track track;
         Copyright copyright;
         String probability;
         String similarity;
-        class Artist {
-            String name;
+        public class Artist {
+            public String name;
         }
-        class Track {
-            String name;
-            String text;
+        public class Track {
+            public String name;
+            public String text;
             Lang lang;
             class Lang {
                 String code;

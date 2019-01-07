@@ -24,32 +24,49 @@ public class SpotifyBroadcastReceiver extends BroadcastReceiver {
     private static final String NOTIFICATION_CHANNEL_DESCRIPTION = "Notifications for the lyrics app for Spotify";
     private static final int NOTIFICATION_PRIORITY_LEVEL = NotificationManager.IMPORTANCE_DEFAULT;
 
+    private static final String METADATA_CHANGED = "com.spotify.music.metadatachanged";
+    private static final String PLAYBACK_STATE_CHANGED = "com.spotify.music.playbackstatechanged";
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        System.out.println("on receive");
         String action = intent.getAction();
         if (action == null) {
             return;
         }
         Log.d("BROADCAST RECEIVED", action);
-        /*
-        switch (action) {
-            case
-            case default:
-        }
-        this.createNotificationChannel(context);
-//        String trackId = intent.getStringExtra("id");
-//        String artistName = intent.getStringExtra("artist");
-//        String albumName = intent.getStringExtra("album");
-        String trackName = intent.getStringExtra("track");
-//        int trackLengthInSec = intent.getIntExtra("length", 0);
 
+        switch (action) {
+            case METADATA_CHANGED:
+                this.updateSharedPreferences(context, intent);
+                this.createNotification(context);
+                break;
+            case PLAYBACK_STATE_CHANGED:
+                break;
+            default:
+                // Do nothing
+        }
+    }
+
+    private void updateSharedPreferences(Context context, Intent intent) {
+        String trackId = intent.getStringExtra("id");
+        String artistName = intent.getStringExtra("artist");
+        String albumName = intent.getStringExtra("album");
+        String trackName = intent.getStringExtra("track");
+        int trackLengthInSec = intent.getIntExtra("length", 0);
+
+        this.createNotificationChannel(context);
         SharedPreferences sharedPref = context.getSharedPreferences(
                 context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(context.getString(R.string.preference_file_track_key), trackName);
-        editor.apply(); // maybe commit instead of apply?
+        editor.putString(context.getString(R.string.preference_file_artist_key), artistName);
+        editor.remove(context.getString(R.string.preference_file_cached_key)); // do i need to check if it exists?
+        editor.commit(); // maybe commit instead of apply?
+    }
 
+    private void createNotification(Context context) {
+        this.createNotificationChannel(context);
+        // TODO: set task properly: back button should return to previous app, not to MainActivity and the homescreen.
         // Create an Intent for the activity you want to start
         Intent resultIntent = new Intent(context, DisplayLyrics.class);
         // Create the TaskStackBuilder and add the intent, which inflates the back stack
@@ -59,15 +76,8 @@ public class SpotifyBroadcastReceiver extends BroadcastReceiver {
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent dismissEvent = new Intent(context, SpotifyBroadcastReceiver.class);
-        dismissEvent.setAction(context.AC);
-        dismissEvent.putExtra(EXTRA_NOTIFICATION_ID, 0);
-        PendingIntent snoozePendingIntent =
-                PendingIntent.getBroadcast(this, 0, dismissEvent, 0);
-
-
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
-//                .setSmallIcon(R.drawable.notification_icon)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle(NOTIFICATION_TITLE)
                 .setContentText(NOTIFICATION_TEXT)
                 .setContentIntent(resultPendingIntent)
@@ -75,7 +85,6 @@ public class SpotifyBroadcastReceiver extends BroadcastReceiver {
 
         NotificationManagerCompat nm = NotificationManagerCompat.from(context);
         nm.notify(NOTIFICATION_ID, mBuilder.build());
-        */
     }
 
     private void createNotificationChannel(Context context) {
