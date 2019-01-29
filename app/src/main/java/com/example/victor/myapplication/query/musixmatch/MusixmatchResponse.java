@@ -55,7 +55,8 @@ class TrackSearchBodyDeserializer implements JsonDeserializer<TrackSearchBody> {
         TrackSearchBody body = new TrackSearchBody();
         JsonArray trackList = json.getAsJsonObject().getAsJsonArray("track_list");
         body.track_list = new TrackSearchBody.Track[trackList.size()];
-        for (int i = 0; i < trackList.size(); i++) {
+        
+        for (int i : trackList) {
             body.track_list[i] = context.deserialize(trackList.get(i), TrackSearchBody.Track.class);
         }
         return body;
